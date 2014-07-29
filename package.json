@@ -1,0 +1,33 @@
+{
+  "name": "hft-exe",
+  "version": "0.0.1",
+  "description": "HappyFunTimes exectuable creator",
+  "main": "index.js",
+  "bin": {
+    "hft-exe": "./bin/hft-exe.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/greggman/hft-exe.git"
+  },
+  "keywords": [
+    "HappyFunTimes",
+    "games",
+    "game"
+  ],
+  "author": "Gregg Tavares",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/greggman/hft-exe/issues"
+  },
+  "homepage": "https://github.com/greggman/hft-exe",
+  "dependencies": {
+    "optionator": "^0.4.0",
+    "cli-color": "^0.3.2",
+    "tmp": "0.0.24",
+    "promise": "^5.0.0"
+  }
+}
