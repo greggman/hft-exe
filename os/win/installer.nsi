@@ -70,7 +70,7 @@ section "install"
 
         # Start Menu
         SetShellVarContext current
-        CreateShortCut "$STARTMENU\Programs\${APPNAME}.lnk" "$INSTDIR\node.exe" "$\"$INSTDIR\server\server.js$\" --app-mode" "$INSTDIR\logo.ico"
+        CreateShortCut "$STARTMENU\Programs\${APPNAME}.lnk" "$INSTDIR\node.exe" "$\"$INSTDIR\start.js$\" --app-mode" "$INSTDIR\logo.ico"
         #CreateShortcut "$SMPrograms\MyApp.lnk" "$InstDir\MyApp.exe"
         #CreateDirectory "$STARTMENU\Programs\${COMPANYNAME}"
         #CreateShortCut "$STARTMENU\Programs\${COMPANYNAME}\${APPNAME}.lnk" "$INSTDIR\node.exe" "$\"$INSTDIR\server\server.js$\" --app-mode" "$INSTDIR\logo.ico"
