@@ -8,6 +8,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 #    end tell
 #
 #EOF
-"${DIR}/bin/node" "${DIR}/../hft/start.js --app-mode"
+"${DIR}/bin/node" "${DIR}/../hft/start.js" "--app-mode"
 
 
