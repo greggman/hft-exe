@@ -22,9 +22,10 @@
 # This is the size (in kB) of all the files copied into "Program Files"
 !define INSTALLSIZE %(installSizeKB)s
 
-RequestExecutionLevel admin ;Require admin rights on NT6+ (When UAC is turned on)
+RequestExecutionLevel user ;Require admin rights on NT6+ (When UAC is turned on)
 
-InstallDir "$PROGRAMFILES\${COMPANYNAME}\${APPNAME}"
+#InstallDir "$PROGRAMFILES\${COMPANYNAME}\${APPNAME}"
+InstallDir "$LOCALAPPDATA\${COMPANYNAME}\${APPNAME}"
 
 # rtf or txt file - remember if it is txt, it must be in the DOS text format (\r\n)
 LicenseData "%(licenseFile)s"
@@ -41,20 +42,20 @@ page license
 page directory
 Page instfiles
 
-!macro VerifyUserIsAdmin
-UserInfo::GetAccountType
-pop $0
-${If} $0 != "admin" ;Require admin rights on NT4+
-        messageBox mb_iconstop "Administrator rights required!"
-        setErrorLevel 740 ;ERROR_ELEVATION_REQUIRED
-        quit
-${EndIf}
-!macroend
+#!macro VerifyUserIsAdmin
+#UserInfo::GetAccountType
+#pop $0
+#${If} $0 != "admin" ;Require admin rights on NT4+
+#        messageBox mb_iconstop "Administrator rights required!"
+#        setErrorLevel 740 ;ERROR_ELEVATION_REQUIRED
+#        quit
+#${EndIf}
+#!macroend
 
-function .onInit
-        setShellVarContext all
-        !insertmacro VerifyUserIsAdmin
-functionEnd
+#function .onInit
+#        setShellVarContext all
+#        !insertmacro VerifyUserIsAdmin
+#functionEnd
 
 section "install"
         # Files for the install directory - to build the installer, these should be in the same directory as the install script (this file)
@@ -68,40 +69,56 @@ section "install"
         writeUninstaller "$INSTDIR\uninstall.exe"
 
         # Start Menu
-        createDirectory "$SMPROGRAMS\${COMPANYNAME}"
-        createShortCut "$SMPROGRAMS\${COMPANYNAME}\${APPNAME}.lnk" "$INSTDIR\node.exe" "$\"$INSTDIR\server\server.js$\" --app-mode" "$INSTDIR\logo.ico"
+        SetShellVarContext current
+        CreateShortCut "$STARTMENU\Programs\${APPNAME}.lnk" "$INSTDIR\node.exe" "$\"$INSTDIR\server\server.js$\" --app-mode" "$INSTDIR\logo.ico"
+        #CreateShortcut "$SMPrograms\MyApp.lnk" "$InstDir\MyApp.exe"
+        #CreateDirectory "$STARTMENU\Programs\${COMPANYNAME}"
+        #CreateShortCut "$STARTMENU\Programs\${COMPANYNAME}\${APPNAME}.lnk" "$INSTDIR\node.exe" "$\"$INSTDIR\server\server.js$\" --app-mode" "$INSTDIR\logo.ico"
+        #CreateShortCut "$STARTMENU\Programs\${COMPANYNAME}\${APPNAME}-Uninstall.lnk" "$INSTDIR\uninstall.exe"        createDirectory "$SMPROGRAMS\${COMPANYNAME}"
+        #createShortCut "$SMPROGRAMS\${COMPANYNAME}\${APPNAME}.lnk" "$INSTDIR\node.exe" "$\"$INSTDIR\server\server.js$\" --app-mode" "$INSTDIR\logo.ico"
 
         # Registry information for add/remove programs
-        WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "DisplayName" "${COMPANYNAME} - ${APPNAME} - ${DESCRIPTION}"
-        WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
-        WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "QuietUninstallString" "$\"$INSTDIR\uninstall.exe$\" /S"
-        WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "InstallLocation" "$\"$INSTDIR$\""
-        WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "DisplayIcon" "$\"$INSTDIR\logo.ico$\""
-        WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "Publisher" "$\"${COMPANYNAME}$\""
-        WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "HelpLink" "$\"${HELPURL}$\""
-        WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "URLUpdateInfo" "$\"${UPDATEURL}$\""
-        WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "URLInfoAbout" "$\"${ABOUTURL}$\""
-        WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "DisplayVersion" "$\"${VERSIONMAJOR}.${VERSIONMINOR}.${VERSIONBUILD}$\""
-        WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "VersionMajor" ${VERSIONMAJOR}
-        WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "VersionMinor" ${VERSIONMINOR}
+        WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "DisplayName" "${COMPANYNAME} - ${APPNAME} - ${DESCRIPTION}"
+        WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
+        WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "QuietUninstallString" "$\"$INSTDIR\uninstall.exe$\" /S"
+        WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "InstallLocation" "$\"$INSTDIR$\""
+        WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "DisplayIcon" "$\"$INSTDIR\logo.ico$\""
+        WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "Publisher" "$\"${COMPANYNAME}$\""
+        WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "HelpLink" "$\"${HELPURL}$\""
+        WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "URLUpdateInfo" "$\"${UPDATEURL}$\""
+        WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "URLInfoAbout" "$\"${ABOUTURL}$\""
+        WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "DisplayVersion" "$\"${VERSIONMAJOR}.${VERSIONMINOR}.${VERSIONBUILD}$\""
+        WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "VersionMajor" ${VERSIONMAJOR}
+        WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "VersionMinor" ${VERSIONMINOR}
         # There is no option for modifying or repairing the install
-        WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "NoModify" 1
-        WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "NoRepair" 1
+        WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "NoModify" 1
+        WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "NoRepair" 1
         # Set the INSTALLSIZE constant (!defined at the top of this script) so Add/Remove Programs can accurately report the size
-        WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "EstimatedSize" ${INSTALLSIZE}
+        WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "EstimatedSize" ${INSTALLSIZE}
 
 sectionEnd
+
+#Section -AdditionalIcons
+#    ${If} ${AtLeastWin7}
+#         CreateShortCut "$SMPROGRAMS\${APPNAME}.lnk" "$INSTDIR\node.exe" "$\"$INSTDIR\server\server.js$\" --app-mode" "$INSTDIR\logo.ico"
+#    ${Else}
+#         CreateShortCut "$DESKTOP\${APPNAME}.lnk" "$INSTDIR\node.exe" "$\"$INSTDIR\server\server.js$\" --app-mode" "$INSTDIR\logo.ico"
+#         CreateShortCut "$SMPROGRAMS\${COMPANYNAME}\${APPNAME}.lnk" "$INSTDIR\node.exe" "$\"$INSTDIR\server\server.js$\" --app-mode" "$INSTDIR\logo.ico"
+#         CreateShortCut "$SMPROGRAMS\${APPNAME}\Uninstall.lnk" "$INSTDIR\Uninstaller.exe"
+#    ${EndIf}
+#SectionEnd
+
 
 # Uninstaller
 
 function un.onInit
-        SetShellVarContext all
+        SetShellVarContext current
 
         #Verify the uninstaller - last chance to back out
         MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME}?" IDOK next
                 Abort
         next:
-        !insertmacro VerifyUserIsAdmin
+#        !insertmacro VerifyUserIsAdmin
 functionEnd
 
 section "uninstall"
@@ -123,6 +140,6 @@ section "uninstall"
         rmDir $INSTDIR
 
         # Remove uninstaller information from the registry
-        DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}"
+        DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}"
 sectionEnd
 

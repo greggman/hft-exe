@@ -1,7 +1,0 @@
-building in: /var/folders/5z/dql5k6l910dbv5k8phj79vdm0000gn/T/tmp-63018e34883k
-{ [Error: ENOENT, no such file or directory '/var/folders/5z/dql5k6l910dbv5k8phj79vdm0000gn/T/tmp-63018e34883k/HappyFunTimes.app/Contents/MacOS/bin/node']
-  errno: 34,
-  code: 'ENOENT',
-  path: '/var/folders/5z/dql5k6l910dbv5k8phj79vdm0000gn/T/tmp-63018e34883k/HappyFunTimes.app/Contents/MacOS/bin/node',
-  syscall: 'chmod' }
-deleting: /var/folders/5z/dql5k6l910dbv5k8phj79vdm0000gn/T/tmp-63018e34883k
