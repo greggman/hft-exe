@@ -11,9 +11,9 @@
 !define COMPANYNAME "Greggman"
 !define DESCRIPTION "The Party Game Platform"
 # These three must be integers
-!define VERSIONMAJOR 0
-!define VERSIONMINOR 0
-!define VERSIONBUILD 2
+!define VERSIONMAJOR %(versionMajor)s
+!define VERSIONMINOR %(versionMinor)s
+!define VERSIONBUILD %(versionPatch)s
 # These will be displayed by the "Click here for support information" link in "Add/Remove Programs"
 # It is possible to use "mailto:" links in here to open the email client
 !define HELPURL "http://superhappyfuntimes.net/support" # "Support Information" link
@@ -22,10 +22,10 @@
 # This is the size (in kB) of all the files copied into "Program Files"
 !define INSTALLSIZE %(installSizeKB)s
 
-RequestExecutionLevel user ;Require admin rights on NT6+ (When UAC is turned on)
+RequestExecutionLevel none ;Require admin rights on NT6+ (When UAC is turned on)
 
-#InstallDir "$PROGRAMFILES\${COMPANYNAME}\${APPNAME}"
-InstallDir "$LOCALAPPDATA\${COMPANYNAME}\${APPNAME}"
+InstallDir "$PROGRAMFILES\${COMPANYNAME}\${APPNAME}"
+#InstallDir "$LOCALAPPDATA\${COMPANYNAME}\${APPNAME}"
 
 # rtf or txt file - remember if it is txt, it must be in the DOS text format (\r\n)
 LicenseData "%(licenseFile)s"
@@ -35,6 +35,7 @@ Icon "%(iconPath)s"
 outFile "%(outFile)s"
 
 !include LogicLib.nsh
+!include "EnvVarUpdate.nsh"
 !include "WinVer.nsh"
 
 # Just three pages - license agreement, install location, and installation
@@ -96,6 +97,13 @@ section "install"
         # Set the INSTALLSIZE constant (!defined at the top of this script) so Add/Remove Programs can accurately report the size
         WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "EstimatedSize" ${INSTALLSIZE}
 
+        ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR\bin"
+        ExpandEnvStrings $0 %COMSPEC%
+
+        # I think this step run in the context of admin? so it doesn't work
+        #ExecWait '"$0" /C "$INSTDIR\bin\hft.bat" "init"'
+
+        LogText "--end--"
 sectionEnd
 
 #Section -AdditionalIcons

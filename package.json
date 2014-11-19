@@ -25,10 +25,11 @@
   },
   "homepage": "https://github.com/greggman/hft-exe",
   "dependencies": {
-    "optionator": "^0.4.0",
     "cli-color": "^0.3.2",
-    "tmp": "0.0.24",
+    "find-in-path": "0.0.1",
+    "optionator": "^0.4.0",
     "promise": "^5.0.0",
-    "find-in-path": "0.0.1"
+    "semver": "^4.1.0",
+    "tmp": "0.0.24"
   }
 }
