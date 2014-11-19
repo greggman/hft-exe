@@ -1,0 +1,47 @@
+#!/bin/sh
+
+DST="/usr/local/bin"
+HFT_DST_PATH="$DST/hft"
+HFT_NODE_PATH="$2/HappyFunTimes.app/Contents/MacOS/bin/node"
+HFT_CLI_PATH="$2/HappyFunTimes.app/Contents/hft/cli/hft"
+
+echo $HFT_DST_PATH
+echo $HFT_NODE_PATH
+
+# add hft to /usr/local/bin
+
+if [ -e "$HFT_DST_PATH" ]
+then
+  echo hft command already installed
+else
+  if [ -e "$DST" ]
+  then
+    echo /usr/local/bin exists
+  else
+    mkdir -p "$DST"
+  fi
+  echo adding hft command to $HFT_DST_PATH
+
+  cat > "$HFT_DST_PATH" <<EOF
+#!${HFT_NODE_PATH}
+;(function () { // wrapper in case we're in module_context mode
+
+"use strict";
+
+require('${HFT_CLI_PATH}');
+
+}());
+EOF
+  chmod gou+x "$HFT_DST_PATH"
+
+fi
+
+# run hft init
+CONSOLE_USER=$(ps aux | grep console | grep -v grep | cut -d' ' -f1)
+sudo -u $CONSOLE_USER "$HFT_DST_PATH" init || true
+
+
+
+
+
+
