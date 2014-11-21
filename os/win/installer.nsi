@@ -103,7 +103,6 @@ section "install"
         # I think this step run in the context of admin? so it doesn't work
         #ExecWait '"$0" /C "$INSTDIR\bin\hft.bat" "init"'
 
-        LogText "--end--"
 sectionEnd
 
 #Section -AdditionalIcons
