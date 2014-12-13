@@ -22,10 +22,10 @@
 # This is the size (in kB) of all the files copied into "Program Files"
 !define INSTALLSIZE %(installSizeKB)s
 
-RequestExecutionLevel none ;Require admin rights on NT6+ (When UAC is turned on)
+RequestExecutionLevel user ;Require admin rights on NT6+ (When UAC is turned on)
 
-InstallDir "$PROGRAMFILES\${COMPANYNAME}\${APPNAME}"
-#InstallDir "$LOCALAPPDATA\${COMPANYNAME}\${APPNAME}"
+#InstallDir "$PROGRAMFILES\${COMPANYNAME}\${APPNAME}"
+InstallDir "$LOCALAPPDATA\${COMPANYNAME}\${APPNAME}"
 
 # rtf or txt file - remember if it is txt, it must be in the DOS text format (\r\n)
 LicenseData "%(licenseFile)s"
@@ -97,11 +97,12 @@ section "install"
         # Set the INSTALLSIZE constant (!defined at the top of this script) so Add/Remove Programs can accurately report the size
         WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "EstimatedSize" ${INSTALLSIZE}
 
-        ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR\bin"
+        ${EnvVarUpdate} $0 "PATH" "A" "HKCU" "$INSTDIR\bin"
+        #${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR\bin"
         ExpandEnvStrings $0 %COMSPEC%
 
         # I think this step run in the context of admin? so it doesn't work
-        #ExecWait '"$0" /C "$INSTDIR\bin\hft.bat" "init"'
+        ExecWait '"$0" /C "$INSTDIR\bin\hft.cmd init"'
 
 sectionEnd
 
