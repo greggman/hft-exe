@@ -88,7 +88,7 @@ This generates npm-shrinkwrap.json, which will look something like this:
           "version": "0.0.1",
           "dependencies": {
             "C": {
-              "version": "0.1.0"
+              "version": "0.0.1"
             }
           }
         }
@@ -101,7 +101,7 @@ installs a package with a npm-shrinkwrap.json file in the package
 root, the shrinkwrap file (rather than package.json files) completely
 drives the installation of that package and all of its dependencies
 (recursively).  So now the author publishes A@0.1.0, and subsequent
-installs of this package will use B@0.0.1 and C@0.1.0, regardless the
+installs of this package will use B@0.0.1 and C@0.0.1, regardless the
 dependencies and versions listed in A's, B's, and C's package.json
 files.
 
@@ -162,15 +162,6 @@ and recursively specifies all dependencies, the contents of B's
 shrinkwrap will implicitly be included in A's shrinkwrap.
 
 ### Caveats
-
-Shrinkwrap files only lock down package versions, not actual package
-contents.  While discouraged, a package author can republish an
-existing version of a package, causing shrinkwrapped packages using
-that version to pick up different code than they were before. If you
-want to avoid any risk that a byzantine author replaces a package
-you're using with code that breaks your application, you could modify
-the shrinkwrap file to use git URL references rather than version
-numbers so that npm always fetches all packages from git.
 
 If you wish to lock down the specific bytes included in a package, for
 example to have 100% confidence in being able to reproduce a
