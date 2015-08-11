@@ -41,6 +41,7 @@ outFile "%(outFile)s"
 # Just three pages - license agreement, install location, and installation
 page license
 page directory
+
 Page instfiles
 
 #!macro VerifyUserIsAdmin
@@ -59,8 +60,13 @@ Page instfiles
 #functionEnd
 
 section "install"
+        ExpandEnvStrings $3 %COMSPEC%
+        ExecWait '"$3" /C "$INSTDIR\bin\hft.cmd stop"'
+        Sleep 3000
+
         # Files for the install directory - to build the installer, these should be in the same directory as the install script (this file)
         setOutPath $INSTDIR
+
         # Files added here should be removed by the uninstaller (see section "uninstall")
         %(filesToInstall)s
 

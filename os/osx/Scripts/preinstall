@@ -1,0 +1,24 @@
+#!/bin/sh
+
+DST="/usr/local/bin"
+HFT_DST_PATH="$DST/hft"
+HFT_NODE_PATH="$2/HappyFunTimes.app/Contents/MacOS/bin/node"
+HFT_CLI_PATH="$2/HappyFunTimes.app/Contents/hft/cli/hft"
+
+echo $HFT_DST_PATH
+echo $HFT_NODE_PATH
+
+# add hft to /usr/local/bin
+
+if [ -e "$HFT_DST_PATH" ]
+then
+  CONSOLE_USER=$(ps aux | grep console | grep -v grep | cut -d' ' -f1)
+  sudo -u $CONSOLE_USER "$HFT_DST_PATH" stop || true
+fi
+
+
+
+
+
+
+
