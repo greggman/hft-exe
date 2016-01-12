@@ -1,7 +1,6 @@
 var fs = require('fs')
 var resolve = require('path').resolve
 
-var chain = require('slide').chain
 var osenv = require('osenv')
 var mkdirp = require('mkdirp')
 var rimraf = require('rimraf')
@@ -16,6 +15,19 @@ var repo = resolve(__dirname, 'add-remote-git-shrinkwrap-repo')
 var daemon
 var daemonPID
 var git
+
+var pjParent = JSON.stringify({
+  name: 'parent',
+  version: '1.2.3',
+  dependencies: {
+    'child': 'git://localhost:1235/child.git#master'
+  }
+}, null, 2) + '\n'
+
+var pjChild = JSON.stringify({
+  name: 'child',
+  version: '1.0.3'
+}, null, 2) + '\n'
 
 test('setup', function (t) {
   bootstrap()
@@ -89,19 +101,6 @@ test('clean', function (t) {
   process.kill(daemonPID)
 })
 
-var pjParent = JSON.stringify({
-  name: 'parent',
-  version: '1.2.3',
-  dependencies: {
-    'child': 'git://localhost:1235/child.git#master'
-  }
-}, null, 2) + '\n'
-
-var pjChild = JSON.stringify({
-  name: 'child',
-  version: '1.0.3'
-}, null, 2) + '\n'
-
 function bootstrap () {
   mkdirp.sync(pkg)
   fs.writeFileSync(resolve(pkg, 'package.json'), pjParent)
@@ -141,26 +140,16 @@ function setup (cb) {
       }
     }
 
-    var opts = {
-      cwd: repo,
-      env: process.env
-    }
-
-    chain(
-      [
-        git.chainableExec(['init'], opts),
-        git.chainableExec(['config', 'user.name', 'PhantomFaker'], opts),
-        git.chainableExec(['config', 'user.email', 'nope@not.real'], opts),
-        git.chainableExec(['add', 'package.json'], opts),
-        git.chainableExec(['commit', '-m', 'stub package'], opts),
+    common.makeGitRepo({
+      path: repo,
+      commands: [
         git.chainableExec(
           ['clone', '--bare', repo, 'child.git'],
           { cwd: pkg, env: process.env }
         ),
         startDaemon
-      ],
-      cb
-    )
+      ]
+    }, cb)
   })
 }
 
