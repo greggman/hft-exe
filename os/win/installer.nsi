@@ -61,7 +61,7 @@ Page instfiles
 
 section "install"
         ExpandEnvStrings $3 %COMSPEC%
-        ExecWait '"$3" /C "$INSTDIR\bin\hft.cmd stop"'
+        ExecWait '"$3" /C "$\"$INSTDIR\bin\hft-stop.cmd$\""'
         Sleep 3000
 
         # Files for the install directory - to build the installer, these should be in the same directory as the install script (this file)
@@ -108,7 +108,7 @@ section "install"
         ExpandEnvStrings $0 %COMSPEC%
 
         # I think this step run in the context of admin? so it doesn't work
-        ExecWait '"$0" /C "$INSTDIR\bin\hft.cmd init"'
+        ExecWait '"$0" /C "$\"$INSTDIR\bin\hft-init.cmd$\""'
 
 sectionEnd
 
